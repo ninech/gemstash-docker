@@ -1,0 +1,14 @@
+---
+:base_path: "/var/lib/gemstash"
+<% if ENV['DATABASE_URL'] %>
+:db_adapter: mysql2
+:db_url: <%= ENV["DATABASE_URL"] %>
+:db_connection_options:
+  :connect_timeout: 10
+  :read_timeout: 5
+  :timeout: 30
+<% end %>
+<% if ENV['MEMCACHED_SERVERS'] %>
+:cache_type: memcached
+:memcached_servers: <%= ENV['MEMCACHED_SERVERS'] %>
+<% end %>
