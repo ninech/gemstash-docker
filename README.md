@@ -7,6 +7,6 @@ This repository contains everything to build a Docker image for [Bundler's Gemst
 
 The following environment variables can be used to configure Gemstash:
 
-**DATABASE_URL**: Define a database connection string for the MySQL connection. (`mysql://user:password@localhost/gemstash`)
+**DB_USER**, **DB_PASSWORD**, **DB_HOST**, **DB_NAME**: Define database connection parameters for the MySQL connection.
 
 **MEMCACHED_SERVERS**: Add a Memcached instance to do the caching. (`memcachedserver1:11211`)

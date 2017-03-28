@@ -15,3 +15,17 @@ services:
     build: .
     ports:
     - 9292
+    depends_on:
+    - mariadb
+    environment:
+      DB_HOST: mariadb
+      DB_USER: gemstash
+      DB_PASSWORD: gemstash
+      DB_NAME: gemstash
+  mariadb:
+    image: mariadb:5.5
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_USER: gemstash
+      MYSQL_PASSWORD: gemstash
+      MYSQL_DATABASE: gemstash
