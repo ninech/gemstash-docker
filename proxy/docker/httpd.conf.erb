@@ -1,0 +1,66 @@
+ServerName localhost
+Listen 8080
+PidFile /tmp/httpd.pid
+Mutex file:/tmp/lock default
+User www-data
+Group www-data
+
+LoadModule auth_basic_module /usr/lib/apache2/modules/mod_auth_basic.so
+LoadModule authn_core_module /usr/lib/apache2/modules/mod_authn_core.so
+LoadModule authn_file_module /usr/lib/apache2/modules/mod_authn_file.so
+LoadModule authz_core_module /usr/lib/apache2/modules/mod_authz_core.so
+LoadModule authz_host_module /usr/lib/apache2/modules/mod_authz_host.so
+LoadModule authz_user_module /usr/lib/apache2/modules/mod_authz_user.so
+LoadModule proxy_module /usr/lib/apache2/modules/mod_proxy.so
+LoadModule proxy_http_module /usr/lib/apache2/modules/mod_proxy_http.so
+LoadModule remoteip_module /usr/lib/apache2/modules/mod_remoteip.so
+LoadModule mpm_event_module /usr/lib/apache2/modules/mod_mpm_event.so
+LoadModule access_compat_module /usr/lib/apache2/modules/mod_access_compat.so
+LoadModule env_module /usr/lib/apache2/modules/mod_env.so
+LoadModule rewrite_module /usr/lib/apache2/modules/mod_rewrite.so
+
+StartServers             2
+MinSpareThreads          25
+MaxSpareThreads          75
+ThreadLimit              64
+ThreadsPerChild          25
+MaxRequestWorkers        150
+MaxConnectionsPerChild   0
+
+DocumentRoot "/var/www"
+
+LogLevel <%= ENV['LOG_LEVEL'] || 'info' %>
+LogFormat "%h %l %u %t \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\"" combined
+ErrorLog /dev/stderr
+CustomLog /dev/stdout combined
+
+<VirtualHost *:8080>
+  ProxyRequests Off
+  ProxyPreserveHost On
+  RemoteIPHeader X-Forwarded-For
+
+  ProxyPass / <%= ENV['PROXY_TARGET_URL'] %>
+  ProxyPassReverse / <%= ENV['PROXY_TARGET_URL'] %>
+
+  <Location />
+    <%- if ENV['BASIC_AUTH_TOKEN'] -%>
+    AuthType Basic
+    AuthName "Proxy"
+    AuthBasicProvider file
+    AuthUserFile "/docker/passwd"
+    <%- end -%>
+    <RequireAny>
+      <%- if ENV['BASIC_AUTH_TOKEN'] -%>
+      Require valid-user
+      <%- end -%>
+
+      <%- unless ENV['IPS_ACCESS_WHITELIST'].to_s.empty? -%>
+      Require ip <%= ENV['IPS_ACCESS_WHITELIST'].split(',').join(' ') %>
+      <%- end -%>
+    </RequireAny>
+  </Location>
+
+  <Proxy *>
+    Require all granted
+  </Proxy>
+</VirtualHost>

@@ -1,0 +1,17 @@
+version: '2'
+services:
+  proxy:
+    build:
+      context: ./proxy
+    ports:
+    - 8000:8080
+    depends_on:
+    - gemstash
+    environment:
+      PROXY_TARGET_URL: "http://gemstash:9292"
+      IPS_ACCESS_WHITELIST: 172.18.0.1
+      BASIC_AUTH_TOKEN: abcd
+  gemstash:
+    build: .
+    ports:
+    - 9292
