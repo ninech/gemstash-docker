@@ -1,5 +1,6 @@
 ---
 :base_path: "/var/lib/gemstash"
+:protected_fetch: false # do not protect private gems
 <% if ENV['DATABASE_URL'] %>
 :db_adapter: mysql2
 :db_url: <%= ENV["DATABASE_URL"] %>
