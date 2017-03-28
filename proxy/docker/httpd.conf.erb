@@ -42,11 +42,6 @@ CustomLog /dev/stdout combined
   ProxyPass / <%= ENV['PROXY_TARGET_URL'] %>
   ProxyPassReverse / <%= ENV['PROXY_TARGET_URL'] %>
 
-  <Location /ping>
-    RewriteEngine on
-    RewriteRule ^(.*)$ $1 [R=204,L]
-  </Location>
-
   <Location />
     <%- if ENV['BASIC_AUTH_TOKEN'] -%>
     AuthType Basic
@@ -65,6 +60,11 @@ CustomLog /dev/stdout combined
     </RequireAny>
   </Location>
 
+  <Location /ping>
+    Require all granted
+    RewriteEngine on
+    RewriteRule ^(.*)$ $1 [R=204,L]
+  </Location>
 
   <Proxy *>
     Require all granted
