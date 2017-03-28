@@ -1,4 +1,5 @@
 FROM ruby:2.4-alpine
+MAINTAINER nine.ch Development <development@nine.ch>
 
 RUN mkdir -p /app /var/lib/gemstash && \
     chmod a+w /var/lib/gemstash
