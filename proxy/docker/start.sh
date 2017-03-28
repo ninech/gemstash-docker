@@ -6,7 +6,7 @@ if [ -z ${BASIC_AUTH_TOKEN+x} ]; then
   echo "No basic auth token set."
 else
   echo "Creating password file."
-  echo "" | htpasswd -i -c /docker/passwd ${BASIC_AUTH_TOKEN}
+  echo "" | htpasswd -i -c /docker/passwd ${BASIC_AUTH_TOKEN} > /dev/null 2>&1
 fi
 
 mkdir -p /tmp/lock
