@@ -14,7 +14,9 @@ services:
   gemstash:
     build: .
     ports:
-    - 9292
+    - 9292:9292
+    volumes:
+    - ./gemstash-data:/var/lib/gemstash
     depends_on:
     - mariadb
     environment:
