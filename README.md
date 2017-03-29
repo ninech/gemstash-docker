@@ -10,3 +10,8 @@ The following environment variables can be used to configure Gemstash:
 **DB_USER**, **DB_PASSWORD**, **DB_HOST**, **DB_NAME**: Define database connection parameters for the MySQL connection.
 
 **MEMCACHED_SERVERS**: Add a Memcached instance to do the caching. (`memcachedserver1:11211`)
+
+Create an authorization key go into the `gemstash` container and run the following command:
+
+    $ docker exec -ti gemstash /bin/sh
+    $ gemstash authorize push --config-file config.yml.erb
