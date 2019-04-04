@@ -1,5 +1,5 @@
 FROM ubuntu:xenial
-MAINTAINER nine.ch Development <development@nine.ch>
+LABEL maintainer="nine.ch <engineering@nine.ch>"
 
 RUN apt-get -qq update && \
     apt-get -qq install -y apache2 ruby && \
